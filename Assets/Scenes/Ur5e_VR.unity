@@ -123,6 +123,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &195513489 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5867032094202027691, guid: 182fb2293fdcf474db9a9d9116461fc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6935117803981274944}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &239049449 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3382489731621253674, guid: 182fb2293fdcf474db9a9d9116461fc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6935117803981274944}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &430895048 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4055563750806660770, guid: 182fb2293fdcf474db9a9d9116461fc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6935117803981274944}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &856341067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 241143118452874802, guid: 182fb2293fdcf474db9a9d9116461fc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6935117803981274944}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &937335395 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5937036951528150232, guid: 182fb2293fdcf474db9a9d9116461fc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6935117803981274944}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &954335180
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,10 +609,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6615638894591635255, guid: 780c10105849e30498d5cee90db43441,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615638894591635255, guid: 780c10105849e30498d5cee90db43441,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.11
+      objectReference: {fileID: 0}
     - target: {fileID: 6615638894968862957, guid: 780c10105849e30498d5cee90db43441,
         type: 3}
       propertyPath: m_Name
       value: PlayerController
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615638894968862966, guid: 780c10105849e30498d5cee90db43441,
+        type: 3}
+      propertyPath: EnableRotation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615638894968862966, guid: 780c10105849e30498d5cee90db43441,
+        type: 3}
+      propertyPath: EnableLinearMovement
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6615638894968862967, guid: 780c10105849e30498d5cee90db43441,
         type: 3}
@@ -597,12 +647,12 @@ PrefabInstance:
     - target: {fileID: 6615638894968862967, guid: 780c10105849e30498d5cee90db43441,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.845
       objectReference: {fileID: 0}
     - target: {fileID: 6615638894968862967, guid: 780c10105849e30498d5cee90db43441,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.085
+      value: -2.02
       objectReference: {fileID: 0}
     - target: {fileID: 6615638894968862967, guid: 780c10105849e30498d5cee90db43441,
         type: 3}
@@ -641,6 +691,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 780c10105849e30498d5cee90db43441, type: 3}
+--- !u!1 &2109066602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5716401304825760714, guid: 182fb2293fdcf474db9a9d9116461fc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6935117803981274944}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2114954002
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,6 +792,81 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ur5e
       objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[0].inputAxis
+      value: Base
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[0].robotPart
+      value: 
+      objectReference: {fileID: 937335395}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[1].inputAxis
+      value: Shoulder
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[1].robotPart
+      value: 
+      objectReference: {fileID: 239049449}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[2].inputAxis
+      value: Elbow
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[2].robotPart
+      value: 
+      objectReference: {fileID: 430895048}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[3].inputAxis
+      value: Wrist1
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[3].robotPart
+      value: 
+      objectReference: {fileID: 195513489}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[4].inputAxis
+      value: Wrist2
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[4].robotPart
+      value: 
+      objectReference: {fileID: 2109066602}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[5].inputAxis
+      value: Wrist3
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[5].robotPart
+      value: 
+      objectReference: {fileID: 856341067}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[6].inputAxis
+      value: Hand
+      objectReference: {fileID: 0}
+    - target: {fileID: 782744065221870462, guid: 182fb2293fdcf474db9a9d9116461fc8,
+        type: 3}
+      propertyPath: joints.Array.data[6].robotPart
+      value: 
+      objectReference: {fileID: 7701895826310839357}
     - target: {fileID: 3059943512058302349, guid: 182fb2293fdcf474db9a9d9116461fc8,
         type: 3}
       propertyPath: m_RootOrder
