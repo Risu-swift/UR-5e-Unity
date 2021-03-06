@@ -130,7 +130,7 @@ namespace RosSharp.Control
         /// <param name="jointIndex">Index of the link selected in the Articulation Chain</param>
         private void UpdateDirection(int jointIndex)
         {
-            float moveDirection = Input.GetAxis("Elbow");
+            float moveDirection = Input.GetAxisRaw("Elbow");
             JointControl current = articulationChain[jointIndex].GetComponent<JointControl>();
             if (previousIndex != jointIndex)
             {
