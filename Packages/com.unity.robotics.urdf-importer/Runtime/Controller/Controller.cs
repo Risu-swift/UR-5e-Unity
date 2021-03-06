@@ -52,8 +52,8 @@ namespace RosSharp.Control
 
         void Update()
         {
-            bool SelectionInput1 = Input.GetKeyDown("right");
-            bool SelectionInput2 = Input.GetKeyDown("left");
+            bool SelectionInput1 = Input.GetButtonDown("Base");
+            bool SelectionInput2 = Input.GetButtonDown("Shoulder");
 
             UpdateDirection(selectedIndex);
 
@@ -130,7 +130,7 @@ namespace RosSharp.Control
         /// <param name="jointIndex">Index of the link selected in the Articulation Chain</param>
         private void UpdateDirection(int jointIndex)
         {
-            float moveDirection = Input.GetAxis("Vertical");
+            float moveDirection = Input.GetAxis("Elbow");
             JointControl current = articulationChain[jointIndex].GetComponent<JointControl>();
             if (previousIndex != jointIndex)
             {
