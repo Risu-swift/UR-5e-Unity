@@ -10,6 +10,8 @@ public class RobotManualInput : MonoBehaviour
     void Update()
     {
         RobotController robotController = robot.GetComponent<RobotController>();
+        if(robotController != null)
+        {
         for (int i = 0; i < robotController.joints.Length; i++)
         {
             float inputVal = Input.GetAxis(robotController.joints[i].inputAxis);
@@ -21,7 +23,7 @@ public class RobotManualInput : MonoBehaviour
             }
         }
         robotController.StopAllJointRotations();
-
+        }
     }
 
 

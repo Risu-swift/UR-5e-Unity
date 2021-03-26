@@ -10,4 +10,12 @@ public class hapticfeedback : MonoBehaviour
             OVRInput.SetControllerVibration(0.3f,0.5f,OVRInput.GetActiveController());
         }
     }
+
+    private void OnCollisionExit(Collision other) {
+
+        if(other.collider.gameObject.layer == 10)
+        {
+            OVRInput.SetControllerVibration(0f,0f,OVRInput.GetActiveController());
+        }
+    }
 }
