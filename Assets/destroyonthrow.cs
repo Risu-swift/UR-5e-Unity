@@ -22,11 +22,11 @@ public class destroyonthrow : MonoBehaviour
             currentobject.transform.position = currentobject.transform.parent.position;
             //
         }
-        
+        exit = false;
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Collider>().gameObject.layer == 11)
+        if (other.GetComponent<Collider>().gameObject.layer == 11 || other.GetComponent<Collider>().gameObject.layer == 12)
         {
             currentobject = other.GetComponent<Collider>().gameObject;
             exit = true;
