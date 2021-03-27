@@ -19,7 +19,7 @@ public class destroyonthrow : MonoBehaviour
     {
         if (exit)
         {
-            currentobject.transform.position = here.transform.position;
+            currentobject.transform.position = currentobject.transform.parent.position;
             //
         }
         
