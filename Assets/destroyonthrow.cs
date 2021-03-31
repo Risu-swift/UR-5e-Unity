@@ -20,9 +20,9 @@ public class destroyonthrow : MonoBehaviour
         if (exit)
         {
             currentobject.transform.position = currentobject.transform.parent.position;
-            //
+            exit = false;
         }
-        exit = false;
+        
     }
     void OnTriggerExit(Collider other)
     {

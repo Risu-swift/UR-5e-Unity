@@ -12,7 +12,7 @@ public class AttachEE : MonoBehaviour
         Debug.Log("GameObject:" + other.gameObject);
         if(other.gameObject.GetComponent<OVRGrabbable>() != null && other.gameObject.layer == 12 && currentEndEffector == null)
         {
-            
+            other.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             other.gameObject.transform.SetParent(eelink.transform, false);
             other.gameObject.transform.localPosition = TT.localPosition;
             other.gameObject.transform.localRotation = TT.localRotation;
@@ -24,13 +24,14 @@ public class AttachEE : MonoBehaviour
     private void Update() {
         if(currentEndEffector != null)
         {
-        if(currentEndEffector.GetComponent<OVRGrabbable>().isGrabbed)
-        {
-            currentEndEffector.transform.SetParent(null);
-        }
-        else{
+       // if(currentEndEffector.GetComponent<OVRGrabbable>().isGrabbed)
+        //{
+         //   currentEndEffector.transform.SetParent(null);
+        //}
+        //else{
              currentEndEffector.transform.localPosition = TT.localPosition;
              currentEndEffector.transform.localRotation = TT.localRotation;
-        }}   
+        //}
+        }   
     }
 }
