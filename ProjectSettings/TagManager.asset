@@ -6,6 +6,9 @@ TagManager:
   tags:
   - robot
   - Base01
+  - table
+  - pingTable
+  - obstacle_static
   layers:
   - Default
   - TransparentFX
