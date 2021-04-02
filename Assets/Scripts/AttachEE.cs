@@ -4,21 +4,25 @@ using UnityEngine;
 
 public class AttachEE : MonoBehaviour
 {
-    [SerializeField]private Transform TT;
-    [SerializeField]private GameObject eelink;
+    [SerializeField] private Transform TT;
+    [SerializeField] private GameObject eelink;
     private GameObject currentEndEffector;
-    private GameObject paddle;
-    private bool attached=false;
     
+    private bool attached = false;
+    [SerializeField] private GameObject originalParent;
+
+  
     private void OnTriggerEnter(Collider other) {
         Debug.Log("GameObject:" + other.gameObject);
         if(other.gameObject.GetComponent<OVRGrabbable>() != null && other.gameObject.layer == 12 && currentEndEffector == null)
         {
+            originalParent = other.gameObject.transform.parent.gameObject;
+            Debug.Log("Original Parent: +" + originalParent);
             other.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             other.gameObject.transform.SetParent(eelink.transform, false);
             other.gameObject.transform.localPosition = TT.localPosition;
             other.gameObject.transform.localRotation = TT.localRotation;
-            paddle = other.gameObject;
+            
             currentEndEffector = other.gameObject;
         }
     }
@@ -51,6 +55,8 @@ public class AttachEE : MonoBehaviour
     {
         if (other.gameObject.GetComponent<OVRGrabbable>() != null && other.gameObject.layer == 12&&currentEndEffector!=null)
         {
+            currentEndEffector.transform.SetParent(originalParent.transform,false);
+            other.gameObject.GetComponent<Rigidbody>().isKinematic = false;
             Debug.Log("TT Unattached");
             attached = false;
 

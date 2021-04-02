@@ -43,7 +43,7 @@ public class PPBall : MonoBehaviour
         {
             debounceTime = 0.02f;
             setState(2);
-            Debug.Log("BALL TOUCHED TABLE");
+            
         }
         else if (collision.gameObject.tag == "robot_paddle")
         {
@@ -60,10 +60,7 @@ public class PPBall : MonoBehaviour
             return false;
         }
         nextState = state;
-        if(nextState==1)
-        {
-            Debug.Log("Function Called");
-        }
+       
         setTime = Time.fixedTime;
         return true;
     }

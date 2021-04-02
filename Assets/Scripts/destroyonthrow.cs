@@ -21,7 +21,7 @@ public class destroyonthrow : MonoBehaviour
         if (exit)
         {
             respawn();
-            Debug.Log("UPDATE EXIT TRUE");
+            
             //currentobject.transform.position = currentobject.transform.parent.position;
            /* if (currentobject.transform.position == currentobject.transform.parent.position)
             {
@@ -45,7 +45,7 @@ public class destroyonthrow : MonoBehaviour
 
             // Destroy(other.GetComponent<Collider>().gameObject);
 
-            Debug.Log("Destroyed");
+            
         }
     }
     /*void OnTriggerEnter(Collider other)
@@ -61,7 +61,7 @@ public class destroyonthrow : MonoBehaviour
     }*/
     private void respawn()
     {
-        Debug.Log("Respawned");
+        
         currentobject.transform.position = currentobject.transform.parent.position;
         exit = false;
     }
