@@ -6,6 +6,10 @@ TagManager:
   tags:
   - robot
   - Base01
+  - table
+  - pingTable
+  - obstacle_static
+  - CamRig
   layers:
   - Default
   - TransparentFX
