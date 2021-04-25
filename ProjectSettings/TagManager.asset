@@ -9,6 +9,7 @@ TagManager:
   - table
   - pingTable
   - obstacle_static
+  - CamRig
   layers:
   - Default
   - TransparentFX
