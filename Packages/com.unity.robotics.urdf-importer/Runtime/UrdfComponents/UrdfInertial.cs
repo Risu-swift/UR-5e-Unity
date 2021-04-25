@@ -1,161 +1,155 @@
 ﻿/*
 © Siemens AG, 2018
 Author: Suzannah Smith (suzannah.smith@siemens.com)
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
 <http://www.apache.org/licenses/LICENSE-2.0>.
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System;
 using UnityEngine;
 
 namespace RosSharp.Urdf
 {
-#if UNITY_2020_1_OR_NEWER
-    [RequireComponent(typeof(ArticulationBody))]
-#else
     [RequireComponent(typeof(Rigidbody))]
-#endif
     public class UrdfInertial : MonoBehaviour
     {
-        public bool displayInertiaGizmo;
+        [SerializeField] private Rigidbody _rigidbody;
+        public bool DisplayInertiaGizmo;
 
-        public bool useUrdfData;
-        public Vector3 centerOfMass;
-        public Vector3 inertiaTensor;
-        public Quaternion inertiaTensorRotation;
-        public Quaternion inertialAxisRotation;
+        public enum RigidbodyDataSource { Urdf, Unity, Manual};
+        public RigidbodyDataSource rigidbodyDataSource;
+
+        public float Mass;
+        public Vector3 CenterOfMass;
+        public Vector3 InertiaTensor;
+        public Quaternion InertiaTensorRotation;
+
+        public float UrdfMass;
+        public Vector3 UrdfCenterOfMass;
+        public Vector3 UrdfInertiaTensor;
+        public Quaternion UrdfInertiaTensorRotation;
 
         private const int RoundDigits = 10;
         private const float MinInertia = 1e-6f;
 
+        private bool isCreated;
+
         public static void Create(GameObject linkObject, Link.Inertial inertial = null)
         {
             UrdfInertial urdfInertial = linkObject.AddComponent<UrdfInertial>();
+            urdfInertial.UrdfMass = (float)inertial.mass;
 
-#if UNITY_2020_1_OR_NEWER
-            ArticulationBody robotLink = urdfInertial.GetComponent<ArticulationBody>();
-#else
-            Rigidbody robotLink = urdfInertial.GetComponent<Rigidbody>();
-#endif
-            if (inertial != null)
-            {
-                robotLink.mass = (float)inertial.mass;
-                if (inertial.origin != null) {
-                    
-                    robotLink.centerOfMass = UrdfOrigin.GetPositionFromUrdf(inertial.origin);
-                }
-                else
-                {
-                    robotLink.centerOfMass = Vector3.zero;
-                }
-                urdfInertial.ImportInertiaData(inertial);
-                 
-                urdfInertial.useUrdfData = true;
-            }
+            if (inertial.origin != null)
+                urdfInertial.UrdfCenterOfMass = UrdfOrigin.GetPositionFromUrdf(inertial.origin);
 
-            urdfInertial.displayInertiaGizmo = false;
+            urdfInertial.ImportInertiaData(inertial.inertia);
+            urdfInertial.Initialize();
+            urdfInertial.isCreated = true;
         }
 
-#region Runtime
-
-        private void Start()
+        private void Initialize()
         {
+            rigidbodyDataSource = RigidbodyDataSource.Urdf;
+  
+            Mass = UrdfMass;
+            CenterOfMass = UrdfCenterOfMass;
+            InertiaTensor = UrdfInertiaTensor;
+            InertiaTensorRotation =  UrdfInertiaTensorRotation;
 
-            UpdateLinkData();
+            DisplayInertiaGizmo = false;
 
+            UpdateRigidBodyData();
         }
 
-        public void UpdateLinkData()
+        #region Runtime
+        private void Reset()
         {
+            if(isCreated)
+                Initialize();
+        }
 
-#if UNITY_2020_1_OR_NEWER
-            ArticulationBody robotLink = GetComponent<ArticulationBody>();
+         private void OnValidate()
+        {
+            if (isCreated)
+                UpdateRigidBodyData();
+        }
 
-#else
-              Rigidbody robotLink = GetComponent<Rigidbody>();  
-#endif
+        public void UpdateRigidBodyData()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
 
-            if (useUrdfData)
+            switch (rigidbodyDataSource)
             {
-                robotLink.centerOfMass = centerOfMass;
-                robotLink.inertiaTensor = inertiaTensor;
-                robotLink.inertiaTensorRotation = inertiaTensorRotation * inertialAxisRotation;
-            }
-            else
-            {
-                robotLink.ResetCenterOfMass();
-                robotLink.ResetInertiaTensor();
+                case RigidbodyDataSource.Urdf:
+                    {
+                        _rigidbody.mass = UrdfMass;
+                        _rigidbody.centerOfMass = UrdfCenterOfMass;
+                        _rigidbody.inertiaTensor = UrdfInertiaTensor;
+                        _rigidbody.inertiaTensorRotation = UrdfInertiaTensorRotation;
+                        return;
+                    }
+                case RigidbodyDataSource.Unity:
+                    {
+                        _rigidbody.mass = Mass;
+                        bool isKinematic = _rigidbody.isKinematic;
+                        _rigidbody.isKinematic = false;
+                        _rigidbody.ResetCenterOfMass();
+                        _rigidbody.ResetInertiaTensor();
+                        _rigidbody.isKinematic = isKinematic;
+                        CenterOfMass = _rigidbody.centerOfMass;
+                        InertiaTensor = _rigidbody.inertiaTensor;
+                        InertiaTensorRotation = _rigidbody.inertiaTensorRotation;
+                        return;
+                    }
+                case RigidbodyDataSource.Manual:
+                    {
+                        _rigidbody.mass = Mass;
+                        _rigidbody.centerOfMass = CenterOfMass;
+                        _rigidbody.inertiaTensor = InertiaTensor;
+                        _rigidbody.inertiaTensorRotation = InertiaTensorRotation;
+                        return;
+                    }
             }
         }
 
         private void OnDrawGizmosSelected()
         {
-            if (displayInertiaGizmo)
+            if (DisplayInertiaGizmo)
             {
-                #if UNITY_2020_1_OR_NEWER
-                    Debug.Log("'ArticulationBody' does not contain a definition for 'inertiaTensorRotation' and no accessible extension method 'inertiaTensorRotation'");
-               /* Gizmos.color = Color.blue;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.forward * GetComponent<ArticulationBody>().inertiaTensor.z);
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.up * GetComponent<ArticulationBody>().inertiaTensor.y);
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.right * GetComponent<ArticulationBody>().inertiaTensor.x);*/
-                #else
                 Gizmos.color = Color.blue;
                 Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().inertiaTensorRotation * Vector3.forward * GetComponent<Rigidbody>().inertiaTensor.z);
                 Gizmos.color = Color.green;
                 Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().inertiaTensorRotation * Vector3.up * GetComponent<Rigidbody>().inertiaTensor.y);
                 Gizmos.color = Color.red;
                 Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().inertiaTensorRotation * Vector3.right * GetComponent<Rigidbody>().inertiaTensor.x);
-                #endif
             }
         }
 
-#endregion
+        #endregion
 
-#region Import
+        #region Import
 
-        private void ImportInertiaData(Link.Inertial inertial)
+        private void ImportInertiaData(Link.Inertial.Inertia inertia)
         {
             Vector3 eigenvalues;
             Vector3[] eigenvectors;
-            Matrix3x3 rotationMatrix = ToMatrix3x3(inertial.inertia);
+            Matrix3x3 rotationMatrix = ToMatrix3x3(inertia);
             rotationMatrix.DiagonalizeRealSymmetric(out eigenvalues, out eigenvectors);
-#if UNITY_2020_1_OR_NEWER
-            ArticulationBody robotLink = GetComponent<ArticulationBody>();
 
-#else
-            Rigidbody robotLink = GetComponent<Rigidbody>();
-#endif
-
-            Vector3 inertiaEulerAngles;
-
-            if(inertial.origin != null)
-            {
-                inertiaEulerAngles = UrdfOrigin.GetRotationFromUrdf(inertial.origin);
-            }
-            else
-            {
-                inertiaEulerAngles = new Vector3(0, 0, 0);
-            }
-
-            this.inertialAxisRotation.eulerAngles = inertiaEulerAngles;
-            
-
-            robotLink.inertiaTensor = ToUnityInertiaTensor(FixMinInertia(eigenvalues));
-            robotLink.inertiaTensorRotation = ToQuaternion(eigenvectors[0], eigenvectors[1], eigenvectors[2]).Ros2Unity() * this.inertialAxisRotation;
-
-            this.centerOfMass = robotLink.centerOfMass;
-            this.inertiaTensor = robotLink.inertiaTensor;
-            this.inertiaTensorRotation = robotLink.inertiaTensorRotation;
-
+            UrdfInertiaTensor = ToUnityInertiaTensor(FixMinInertia(eigenvalues));
+            Debug.Log(UrdfInertiaTensor);
+            UrdfInertiaTensorRotation = ToQuaternion(eigenvectors[0], eigenvectors[1], eigenvectors[2]).Ros2Unity();
+            Debug.Log(UrdfInertiaTensorRotation);
         }
 
         private static Vector3 ToUnityInertiaTensor(Vector3 vector3)
@@ -221,53 +215,33 @@ namespace RosSharp.Urdf
             return new Quaternion(qx, qy, qz, qw);
         }
 
-#endregion
+        #endregion
 
-#region Export
-        public Link.Inertial ExportInertialData() 
+        #region Export
+        public Link.Inertial ExportInertialData()
         {
-#if UNITY_2020_1_OR_NEWER
-            ArticulationBody robotLink = GetComponent<ArticulationBody>();
+            // should we read the data from this clas instead of _rigidbody?
+            Origin inertialOrigin = new Origin(_rigidbody.centerOfMass.Unity2Ros().ToRoundedDoubleArray(), new double[] { 0, 0, 0 });
+            Link.Inertial.Inertia inertia = ExportInertiaData(_rigidbody);
 
-#else
-            Rigidbody robotLink = GetComponent<Rigidbody>();
-#endif
-
-            if (robotLink == null)
-                return null;
-
-            UpdateLinkData();
-            Vector3 originAngles = inertialAxisRotation.eulerAngles;
-            Origin inertialOrigin = new Origin(robotLink.centerOfMass.Unity2Ros().ToRoundedDoubleArray(), new double[] { (double)originAngles.x, (double)originAngles.y, (double)originAngles.z });
-            Link.Inertial.Inertia inertia = ExportInertiaData();
-
-            return new Link.Inertial(Math.Round(robotLink.mass, RoundDigits), inertialOrigin, inertia);
+            return new Link.Inertial(Math.Round(_rigidbody.mass, RoundDigits), inertialOrigin, inertia);
         }
 
-        private Link.Inertial.Inertia ExportInertiaData()
+        private static Link.Inertial.Inertia ExportInertiaData(Rigidbody _rigidbody)
         {
-#if UNITY_2020_1_OR_NEWER
-            ArticulationBody robotLink = GetComponent<ArticulationBody>();
-
-#else
-            Rigidbody robotLink = GetComponent<Rigidbody>();
-#endif
             Matrix3x3 lamdaMatrix = new Matrix3x3(new[] {
-                robotLink.inertiaTensor[0],
-                robotLink.inertiaTensor[1],
-                robotLink.inertiaTensor[2] });
+                _rigidbody.inertiaTensor[0],
+                _rigidbody.inertiaTensor[1],
+                _rigidbody.inertiaTensor[2] });
 
-            Matrix3x3 qMatrix = Quaternion2Matrix(robotLink.inertiaTensorRotation * Quaternion.Inverse(inertialAxisRotation));
+            Matrix3x3 qMatrix = Quaternion2Matrix(_rigidbody.inertiaTensorRotation);
 
             Matrix3x3 qMatrixTransposed = qMatrix.Transpose();
 
             Matrix3x3 inertiaMatrix = qMatrix * lamdaMatrix * qMatrixTransposed;
 
-
             return ToRosCoordinates(ToInertia(inertiaMatrix));
         }
-
-
 
         private static Matrix3x3 Quaternion2Matrix(Quaternion quaternion)
         {
@@ -312,7 +286,6 @@ namespace RosSharp.Urdf
                 iyz = -unityInertia.ixy
             };
         }
-#endregion
+        #endregion
     }
 }
-

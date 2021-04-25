@@ -1,6 +1,7 @@
 ﻿/*
 © Siemens AG, 2018
 Author: Suzannah Smith (suzannah.smith@siemens.com)
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -10,7 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
 using UnityEngine;
 
@@ -18,17 +19,12 @@ namespace RosSharp.Urdf
 {
     public class UrdfJointFixed : UrdfJoint
     {
-        public override JointTypes JointType => JointTypes.Fixed;
-
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointFixed urdfJoint = linkObject.AddComponent<UrdfJointFixed>();
-            #if UNITY_2020_1_OR_NEWER
-                urdfJoint.unityJoint = linkObject.AddComponent<ArticulationBody>();
-            #else
-                        urdfJoint.UnityJoint = linkObject.AddComponent<FixedJoint>();
-                        urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
-            #endif
+            urdfJoint._jointType = JointTypes.Fixed;
+            urdfJoint.UnityJoint = linkObject.AddComponent<FixedJoint>();
+            urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
 
             return urdfJoint;
         }

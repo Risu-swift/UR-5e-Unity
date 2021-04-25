@@ -1,10 +1,13 @@
 ﻿/*
 © Siemens AG, 2018-2019
 Author: Suzannah Smith (suzannah.smith@siemens.com)
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
 <http://www.apache.org/licenses/LICENSE-2.0>.
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,8 +17,6 @@ limitations under the License.
 
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
-using MeshProcess;
 
 namespace RosSharp.Urdf.Editor
 {
@@ -24,7 +25,7 @@ namespace RosSharp.Urdf.Editor
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
-            
+
             switch (geometryType)
             {
                 case GeometryTypes.Box:
@@ -40,16 +41,12 @@ namespace RosSharp.Urdf.Editor
                     break;
                 case GeometryTypes.Mesh:
                     if (geometry != null)
-                    {
                         geometryGameObject = CreateMeshCollider(geometry.mesh);
-                    }
                     else
                     {
                         geometryGameObject = new GameObject(geometryType.ToString());
                         geometryGameObject.AddComponent<MeshCollider>();
                     }
-                    //var collider = geometryGameObject.GetComponent<MeshCollider>();
-                    //collider.convex = true;
                     break;
             }
 
@@ -64,6 +61,7 @@ namespace RosSharp.Urdf.Editor
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
             GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
+
             if (prefabObject == null)
                 return null;
 
@@ -105,40 +103,19 @@ namespace RosSharp.Urdf.Editor
             collisionObject.transform.SetParentAndAlign(parent);
         }
 
-        private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = true)
+        private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = false)
         {
             MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
-            if (UrdfRobotExtensions.importsettings.convexMethod == ImportSettings.convexDecomposer.unity)
+            foreach (MeshFilter meshFilter in meshFilters)
             {
-                foreach (MeshFilter meshFilter in meshFilters)
-                {
-                    GameObject child = meshFilter.gameObject;
-                    MeshCollider meshCollider = child.AddComponent<MeshCollider>();
-                    meshCollider.sharedMesh = meshFilter.sharedMesh;
+                GameObject child = meshFilter.gameObject;
+                MeshCollider meshCollider = child.AddComponent<MeshCollider>();
+                meshCollider.sharedMesh = meshFilter.sharedMesh;
 
-                    meshCollider.convex = setConvex;
+                meshCollider.convex = setConvex;
 
-                    Object.DestroyImmediate(child.GetComponent<MeshRenderer>());
-                    Object.DestroyImmediate(meshFilter);
-                }
-            }
-            else
-            {
-                foreach (MeshFilter meshFilter in meshFilters)
-                {                   
-                    GameObject child = meshFilter.gameObject;
-                    VHACD decomposer = child.AddComponent<VHACD>();
-                    List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
-                    foreach (Mesh collider in colliderMeshes)
-                    {
-                        MeshCollider current = child.AddComponent<MeshCollider>();
-                        current.sharedMesh = collider;
-                        current.convex = setConvex;
-                    }
-                    Component.DestroyImmediate(child.GetComponent<VHACD>());
-                    Object.DestroyImmediate(child.GetComponent<MeshRenderer>());
-                    Object.DestroyImmediate(meshFilter);
-                }
+                Object.DestroyImmediate(child.GetComponent<MeshRenderer>());
+                Object.DestroyImmediate(meshFilter);
             }
         }
     }

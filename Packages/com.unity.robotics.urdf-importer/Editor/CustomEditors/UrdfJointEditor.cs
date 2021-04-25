@@ -1,10 +1,13 @@
 ﻿/*
 © Siemens AG, 2018-2019
 Author: Suzannah Smith (suzannah.smith@siemens.com)
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
 <http://www.apache.org/licenses/LICENSE-2.0>.
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,10 +26,13 @@ namespace RosSharp.Urdf.Editor
         private UrdfJoint urdfJoint;
         private bool showDetails;
 
+        protected virtual void OnEnable()
+        {
+            urdfJoint = (UrdfJoint)serializedObject.targetObject;    
+        }
+
         public override void OnInspectorGUI()
         {
-            urdfJoint = (UrdfJoint) target;
-
             GUILayout.Space(5);
 
             UrdfJoint.JointTypes newJointType = urdfJoint.JointType;
@@ -48,7 +54,7 @@ namespace RosSharp.Urdf.Editor
             showDetails = EditorGUILayout.Foldout(showDetails, "Joint URDF Configuration", true);
             if (showDetails)
             {
-                urdfJoint.jointName = EditorGUILayout.TextField("Name", urdfJoint.jointName);
+                urdfJoint.JointName = EditorGUILayout.TextField("Name", urdfJoint.JointName);
 
                 if (urdfJoint.JointType != UrdfJoint.JointTypes.Fixed)
                     GUILayout.BeginVertical("HelpBox");

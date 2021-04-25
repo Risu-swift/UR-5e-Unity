@@ -1,6 +1,7 @@
 ﻿/*
 © Siemens AG, 2017-2019
 Author: Dr. Martin Bischoff (martin.bischoff@siemens.com)
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,11 +18,7 @@ using UnityEngine;
 
 namespace RosSharp.Urdf
 {
-    #if UNITY_2020_1_OR_NEWER
-        [RequireComponent(typeof(ArticulationBody))]
-    #else
-        [RequireComponent(typeof(Joint))]
-    #endif
+    //[RequireComponent(typeof(Joint))]
     public abstract class UrdfJoint : MonoBehaviour
     {
         public enum JointTypes
@@ -34,38 +31,28 @@ namespace RosSharp.Urdf
             Planar
         }
 
-    public int xAxis = 0;
-    
-#if UNITY_2020_1_OR_NEWER
-        protected UnityEngine.ArticulationBody unityJoint;
-        protected Vector3 axisofMotion;
-#else
-        protected UnityEngine.Joint unityJoint;
-#endif
-        public string jointName;
+        protected UnityEngine.Joint UnityJoint;
+        public string JointName;
 
-        public abstract JointTypes JointType { get; } // Clear out syntax
+        public JointTypes JointType { get { return _jointType; } protected set { value = _jointType; } }
+        [SerializeField] protected JointTypes _jointType;
         public bool IsRevoluteOrContinuous => JointType == JointTypes.Revolute || JointType == JointTypes.Revolute;
         public double EffortLimit = 1e3;
         public double VelocityLimit = 1e3;
-        
+
         protected const int RoundDigits = 6;
         protected const float Tolerance = 0.0000001f;
 
         public static void Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
-        { 
-            #if UNITY_2020_1_OR_NEWER 
-             //ArticulationBody parentRigidbody = linkObject.transform.parent.gameObject.GetComponent<ArticulationBody>();
-#else
+        {
             Rigidbody parentRigidbody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
             if (parentRigidbody == null) return;
-#endif
 
             UrdfJoint urdfJoint = AddCorrectJointType(linkObject, jointType);
 
             if (joint != null)
             {
-                urdfJoint.jointName = joint.name;
+                urdfJoint.JointName = joint.name;
                 urdfJoint.ImportJointData(joint);
             }
         }
@@ -96,56 +83,36 @@ namespace RosSharp.Urdf
                     break;
             }
 
-
-#if UNITY_2020_1_OR_NEWER
-#else
             UnityEngine.Joint unityJoint = linkObject.GetComponent<UnityEngine.Joint>();
             unityJoint.connectedBody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
             unityJoint.autoConfigureConnectedAnchor = true;
-#endif
 
             return urdfJoint;
         }
-
-        /// <summary>
-        /// Changes the type of the joint
-        /// </summary>
-        /// <param name="linkObject">Joint whose type is to be changed</param>
-        /// <param name="newJointType">Type of the new joint</param>
         public static void ChangeJointType(GameObject linkObject, JointTypes newJointType)
         {
             linkObject.transform.DestroyImmediateIfExists<UrdfJoint>();
             linkObject.transform.DestroyImmediateIfExists<HingeJointLimitsManager>();
             linkObject.transform.DestroyImmediateIfExists<PrismaticJointLimitsManager>();
-            #if UNITY_2020_1_OR_NEWER
-                        linkObject.transform.DestroyImmediateIfExists<UnityEngine.ArticulationBody>();
-            #else            
-                        linkObject.transform.DestroyImmediateIfExists<UnityEngine.Joint>();
-            #endif
-                        AddCorrectJointType(linkObject, newJointType);
+            linkObject.transform.DestroyImmediateIfExists<UnityEngine.Joint>();
+
+            AddCorrectJointType(linkObject, newJointType);
         }
 
         #region Runtime
 
         public void Start()
         {
-            #if UNITY_2020_1_OR_NEWER
-                        unityJoint = GetComponent<UnityEngine.ArticulationBody>();
-            #else
-                        unityJoint = GetComponent<UnityEngine.Joint>();
-            #endif
+            UnityJoint = GetComponent<UnityEngine.Joint>();
         }
-
         public virtual float GetPosition()
         {
             return 0;
         }
-
         public virtual float GetVelocity()
         {
             return 0;
         }
-
         public virtual float GetEffort()
         {
             return 0;
@@ -154,7 +121,7 @@ namespace RosSharp.Urdf
         public void UpdateJointState(float deltaState)
         {
             OnUpdateJointState(deltaState);
-        } 
+        }
         protected virtual void OnUpdateJointState(float deltaState) { }
 
         #endregion
@@ -184,7 +151,7 @@ namespace RosSharp.Urdf
 
         protected virtual void ImportJointData(Joint joint) { }
         
-        protected static Vector3 GetAxis(Joint.Axis axis) 
+        protected static Vector3 GetAxis(Joint.Axis axis)
         {
             return axis.xyz.ToVector3().Ros2Unity();
         }
@@ -219,30 +186,26 @@ namespace RosSharp.Urdf
             return new SoftJointLimit { limit = (float)limit.upper };
         }
 
-        protected virtual void AdjustMovement(Joint joint) {}
-
         #endregion
 
         #region Export
 
         public Joint ExportJointData()
         {
-            #if UNITY_2020_1_OR_NEWER
-                        unityJoint = GetComponent<UnityEngine.ArticulationBody>();
-            #else
-                        unityJoint = GetComponent<UnityEngine.Joint>();
-            #endif
+            UnityJoint = GetComponent<UnityEngine.Joint>();
+
             CheckForUrdfCompatibility();
 
             //Data common to all joints
             Joint joint = new Joint(
-                jointName,
+                JointName,
                 JointType.ToString().ToLower(),
                 gameObject.transform.parent.name,
                 gameObject.name,
                 UrdfOrigin.ExportOriginData(transform));
 
             joint.limit = ExportLimitData();
+
             return ExportSpecificJointData(joint);
         }
 
@@ -275,59 +238,46 @@ namespace RosSharp.Urdf
 
         protected virtual bool IsJointAxisDefined()
         {
-#if UNITY_2020_1_OR_NEWER
-            if (axisofMotion == null)
-                return false;
-            else
-                return true;
-#else
-                        UnityEngine.Joint joint = GetComponent<UnityEngine.Joint>();
-                        return !(Math.Abs(joint.axis.x) < Tolerance &&
-                                 Math.Abs(joint.axis.y) < Tolerance &&
-                                 Math.Abs(joint.axis.z) < Tolerance);
-#endif
+            UnityEngine.Joint joint = GetComponent<UnityEngine.Joint>();
+            return !(Math.Abs(joint.axis.x) < Tolerance &&
+                     Math.Abs(joint.axis.y) < Tolerance &&
+                     Math.Abs(joint.axis.z) < Tolerance);
         }
 
         public void GenerateUniqueJointName()
         {
-            jointName = transform.parent.name + "_" + transform.name + "_joint";
+            JointName = transform.parent.name + "_" + transform.name + "_joint";
         }
 
         protected Joint.Axis GetAxisData(Vector3 axis)
         {
-            double[] rosAxis = axis.ToRoundedDoubleArray();
+            double[] rosAxis = axis.Unity2Ros().ToRoundedDoubleArray();
             return new Joint.Axis(rosAxis);
         }
         
-        private bool IsAnchorTransformed() // TODO : Check for tolerances before implementation
+        private bool IsAnchorTransformed()
         {
-
             UnityEngine.Joint joint = GetComponent<UnityEngine.Joint>();
 
             return Math.Abs(joint.anchor.x) > Tolerance || 
                 Math.Abs(joint.anchor.x) > Tolerance ||
                 Math.Abs(joint.anchor.x) > Tolerance;
         }
-
+        
         private void CheckForUrdfCompatibility()
         {
             if (!AreLimitsCorrect())
-                Debug.LogWarning("Limits are not defined correctly for Joint " + jointName + " in Link " + name +
+                Debug.LogWarning("Limits are not defined correctly for Joint " + JointName + " in Link " + name +
                                  ". This may cause problems when visualizing the robot in RVIZ or Gazebo.", 
                                  gameObject);
             if (!IsJointAxisDefined())
-                Debug.LogWarning("Axis for joint " + jointName + " is undefined. Axis will not be written to URDF, " +
+                Debug.LogWarning("Axis for joint " + JointName + " is undefined. Axis will not be written to URDF, " +
                                  "and the default axis will be used instead.", 
                                  gameObject);
-#if UNITY_2020_1_OR_NEWER
-
-#else
-            if (IsAnchorTransformed())
+            if(IsAnchorTransformed())
                 Debug.LogWarning("The anchor position defined in the joint connected to " + name + " will be" +
                                  " ignored in URDF. Instead of modifying anchor, change the position of the link.", 
                                  gameObject);
-#endif
-
         }
 
         #endregion
