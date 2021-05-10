@@ -1,7 +1,6 @@
-﻿/*
+﻿ /*
 © Siemens AG, 2017-2018
 Author: Dr. Martin Bischoff (martin.bischoff@siemens.com)
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -14,7 +13,6 @@ limitations under the License.
 */
 
 using UnityEditor;
-using UnityEngine;
 
 namespace RosSharp.Urdf.Editor
 {
@@ -24,49 +22,36 @@ namespace RosSharp.Urdf.Editor
     {
         private const float toleranceThreshold = 10;
 
-        SerializedProperty pLargeAngleLimitMin;
-        SerializedProperty pLargeAngleLimitMax;
-        SerializedProperty pTolerance;
-        HingeJointLimitsManager obj;
-
-        protected virtual void OnEnable()
-        {
-            obj = (HingeJointLimitsManager)serializedObject.targetObject;
-            pLargeAngleLimitMin = serializedObject.FindProperty("LargeAngleLimitMin");
-            pLargeAngleLimitMax = serializedObject.FindProperty("LargeAngleLimitMax");
-            pTolerance = serializedObject.FindProperty("Tolerance");
-        }
+        private HingeJointLimitsManager hingeJointLimitsManager;
 
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
+            base.OnInspectorGUI();
 
-            pLargeAngleLimitMin.floatValue = EditorGUILayout.FloatField("Large Angle Limit Min: ", pLargeAngleLimitMin.floatValue);
-            pLargeAngleLimitMax.floatValue = EditorGUILayout.FloatField("Large Angle Limit Max: ", pLargeAngleLimitMax.floatValue);
-            pTolerance.floatValue = EditorGUILayout.FloatField("Tolerance: ", pTolerance.floatValue);
+            hingeJointLimitsManager = (HingeJointLimitsManager)target;
+            //if (EditorGUILayout.Foldout(true, "Angles"))
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Actual Angle:"), new GUIContent(obj.AngleActual.ToString("F2")));
-            EditorGUILayout.LabelField(new GUIContent("Actual Rotation No.:"), new GUIContent(obj.RotationNumberActual.ToString()));
+            EditorGUILayout.LabelField("Actual Angle:", hingeJointLimitsManager.AngleActual.ToString());
+            EditorGUILayout.LabelField("Actual Rotation No.:", hingeJointLimitsManager.RotationNumberActual.ToString());
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Min Angle:"), new GUIContent(obj.AngleLimitMin.ToString("F2")));
-            EditorGUILayout.LabelField(new GUIContent("Min. No. of Rotations:"), new GUIContent(obj.RotationNumberMin.ToString()));
+            EditorGUILayout.LabelField("Min Angle:", hingeJointLimitsManager.AngleLimitMin.ToString());
+            EditorGUILayout.LabelField("Min. No. of Rotations:", hingeJointLimitsManager.RotationNumberMin.ToString());
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Max Angle:"), new GUIContent(obj.AngleLimitMax.ToString("F2")));
-            EditorGUILayout.LabelField(new GUIContent("Max. No. of Rotations:"), new GUIContent(obj.RotationNumberMax.ToString()));
+            EditorGUILayout.LabelField("Max Angle:", hingeJointLimitsManager.AngleLimitMax.ToString());
+            EditorGUILayout.LabelField("Max. No. of Rotations:", hingeJointLimitsManager.RotationNumberMax.ToString());
             EditorGUILayout.EndHorizontal();
 
-            if (180 - obj.AngleLimitMin < toleranceThreshold)
+            if (180 - hingeJointLimitsManager.AngleLimitMin < toleranceThreshold)
                 EditorGUILayout.HelpBox("Min. Angle is close to +180° where this fix will not work properly. Please increase tolerance.", MessageType.Warning);
 
-            if (180 - obj.AngleLimitMax < toleranceThreshold)
+            if (180 - hingeJointLimitsManager.AngleLimitMax < toleranceThreshold)
                 EditorGUILayout.HelpBox("Max. Angle is close to -180° where this fix will not work properly. Please increase tolerance.", MessageType.Warning);
 
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

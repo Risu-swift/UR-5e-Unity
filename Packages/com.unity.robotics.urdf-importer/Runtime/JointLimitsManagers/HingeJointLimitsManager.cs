@@ -1,7 +1,6 @@
-/*
+﻿/*
 © Siemens AG, 2017-2018
 Author: Dr. Martin Bischoff (martin.bischoff@siemens.com)
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -11,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/
+*/ 
 
 using UnityEngine;
 
@@ -21,8 +20,6 @@ namespace RosSharp
     [ExecuteInEditMode]
     public class HingeJointLimitsManager : MonoBehaviour
     {
-        private HingeJointAngleCalculator _hingeJointAngleCalculator;
-
         public float LargeAngleLimitMin;
         public float LargeAngleLimitMax;
 
@@ -44,7 +41,6 @@ namespace RosSharp
         private void Awake()
         {
             _hingeJoint = GetComponent<HingeJoint>();
-            _hingeJointAngleCalculator = GetComponent<HingeJointAngleCalculator>();
             RecalculateJointLimits();
         }
 
@@ -122,8 +118,9 @@ namespace RosSharp
         private void UpdateAngles()
         {
             anglePrevious = AngleActual;
-            AngleActual = _hingeJointAngleCalculator.Angle;
 
+            AngleActual = _hingeJoint.angle;
+            
             if (anglePrevious < -90 && AngleActual > 90)
                 RotationNumberActual -= 1;
             else if (anglePrevious > 90 && AngleActual < -90)
@@ -160,8 +157,8 @@ namespace RosSharp
 
         public void InitializeLimits(Urdf.Joint.Limit limit, HingeJoint joint)
         {
-            LargeAngleLimitMin = (float)limit.upper * -1.0f * Mathf.Rad2Deg;
-            LargeAngleLimitMax = (float)limit.lower * -1.0f * Mathf.Rad2Deg;
+            LargeAngleLimitMin = (float)limit.lower * Mathf.Rad2Deg;
+            LargeAngleLimitMax = (float)limit.upper * Mathf.Rad2Deg;
 
             _hingeJoint = joint;
 
