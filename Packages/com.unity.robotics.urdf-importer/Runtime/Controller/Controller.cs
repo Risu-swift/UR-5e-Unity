@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+
 namespace RosSharp.Control
 {
     public enum RotationDirection { None = 0, Positive = 1, Negative = -1 };
@@ -10,15 +11,19 @@ namespace RosSharp.Control
 
     public class Controller : MonoBehaviour
     {
-        private ArticulationBody[] articulationChain;
+        public ArticulationBody[] articulationChain;
+   
         // Stores original colors of the part being highlighted
         private Color[] prevColor;
         private int previousIndex;
+        private JointControl current;
+        public MouseHoldRight[] mouseClickR;
+        public MouseHoldLeft[] mouseClickL;
 
         [InspectorReadOnly(hideInEditMode: true)]
         public string selectedJoint;
-        [HideInInspector]
-        public int selectedIndex;
+        //[HideInInspector]
+        public  int selectedIndex;
 
         public ControlType control = ControlType.PositionControl;
         public float stiffness;
@@ -27,9 +32,14 @@ namespace RosSharp.Control
         public float speed = 5f; // Units: degree/s
         public float torque = 100f; // Units: Nm or N
         public float acceleration = 5f;// Units: m/s^2 / degree/s^2
+        public float moveDirection;
+        public GameObject currentJoint;
+        public Vector3[] alljoints;
+      
 
         [Tooltip("Color to highlight the currently selected join")]
         public Color highLightColor = new Color(255, 0, 0, 255);
+        // public MouseHold shoulder_link=GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<MouseHold>();
 
         void Start()
         {
@@ -47,12 +57,109 @@ namespace RosSharp.Control
                 joint.xDrive = currentDrive;
             }
             DisplaySelectedJoint(selectedIndex);
-            StoreJointColors(selectedIndex);
+            // StoreJointColors(selectedIndex);
+            /*for (int i = 0; i <= 5; i++)
+            {
+                mouseClickR[i] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(i).transform.GetChild(3).GetComponent<MouseHoldRight>();
+                *//*mouseClickR[0] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(0).GetComponent<MouseHoldRight>();
+               mouseClickR[1] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(1).GetComponent<MouseHoldRight>();
+                   mouseClickR[2] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(2).GetComponent<MouseHoldRight>();
+                   mouseClickR[3] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(3).GetComponent<MouseHoldRight>();
+                   mouseClickR[4] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(4).GetComponent<MouseHoldRight>();
+                   mouseClickR[5] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(0).GetComponent<MouseHoldRight>();*//*
+                //}
+
+
+            }*/
+            /*for (int i = 0; i <= 5; i++)
+            {
+                mouseClickL[i] = GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(i).transform.GetChild(4).GetComponent<MouseHoldLeft>();
+            }*/
         }
 
         void Update()
         {
-            bool SelectionInput1 = Input.GetButtonDown("Base");
+            if(mouseClickR[0].pointerDown)
+            {
+                Debug.Log("ShoulderLinKRightMove");
+               selectedIndex = 2;
+                moveDirection = -1;
+            }
+            if (mouseClickL[0].pointerDown)
+            {
+                Debug.Log("ShoulderLinKLeftMove");
+                selectedIndex = 2;
+                moveDirection = 1;
+            }
+            if (mouseClickR[1].pointerDown)
+            {
+                selectedIndex = 3;
+                moveDirection = -1;
+            }
+            if (mouseClickL[1].pointerDown)
+            {
+                selectedIndex = 3;
+                moveDirection = 1;
+            }
+            if (mouseClickR[2].pointerDown)
+            {
+                selectedIndex = 4;
+                moveDirection = -1;
+            }
+            if (mouseClickL[2].pointerDown)
+            {
+                selectedIndex = 4;
+                moveDirection = 1;
+            }
+            if (mouseClickR[3].pointerDown)
+            {
+                selectedIndex = 5;
+                moveDirection = -1;
+            }
+            if (mouseClickL[3].pointerDown)
+            {
+                selectedIndex = 5;
+                moveDirection = 1;
+            }
+            
+            if (mouseClickR[4].pointerDown)
+            {
+                selectedIndex = 6;
+                moveDirection = -1;
+            }
+            if (mouseClickL[4].pointerDown)
+            {
+                selectedIndex = 6;
+                moveDirection = 1;
+            }
+            if (mouseClickR[5].pointerDown)
+            {
+                Debug.Log("Wrist3_link");
+                selectedIndex = 7;
+                moveDirection = -1;
+            }
+            if (mouseClickL[5].pointerDown)
+            {
+                Debug.Log("Wrist3_link");
+                selectedIndex = 7;
+                moveDirection = 1;
+            }
+            /*Debug.Log("Position of objec"+articulationChain[2].transform.position);
+            int l = 0;
+            for(int g=2;g<=7;g++)
+            {
+               
+                alljoints[l]= articulationChain[g].transform.position;
+                
+                l++;
+
+            }
+            jointValueMonitor.getvalues(alljoints);
+*/
+
+
+            UpdateDirection(selectedIndex);
+            /*bool SelectionInput1 = Input.GetButtonDown("Base");
             bool SelectionInput2 = Input.GetButtonDown("Shoulder");
 
             UpdateDirection(selectedIndex);
@@ -82,25 +189,27 @@ namespace RosSharp.Control
                 Highlight(selectedIndex);
             }
 
-            UpdateDirection(selectedIndex);
+            UpdateDirection(selectedIndex);*/
+            Highlight(selectedIndex);
+
         }
 
         /// <summary>
         /// Highlights the color of the robot by changing the color of the part to a color set by the user in the inspector window
         /// </summary>
         /// <param name="selectedIndex">Index of the link selected in the Articulation Chain</param>
-        private void Highlight(int selectedIndex)
+        public void Highlight(int selectedIndex)
         {
-            if (selectedIndex == previousIndex)
+           /* if (selectedIndex == previousIndex)
             {
                 return;
-            }
+            }*/
 
             // reset colors for the previously selected joint
-            ResetJointColors(previousIndex);
+           // ResetJointColors(previousIndex);
 
             // store colors for the current selected joint
-            StoreJointColors(selectedIndex);
+            //StoreJointColors(selectedIndex);
 
             DisplaySelectedJoint(selectedIndex);
             Renderer[] rendererList = articulationChain[selectedIndex].transform.GetChild(0).GetComponentsInChildren<Renderer>();
@@ -128,17 +237,30 @@ namespace RosSharp.Control
         /// Sets the direction of movement of the joint on every update
         /// </summary>
         /// <param name="jointIndex">Index of the link selected in the Articulation Chain</param>
-        private void UpdateDirection(int jointIndex)
+        public void UpdateDirection(int jointIndex)
         {
-            float moveDirection = Input.GetAxisRaw("Elbow")
+            /*GameObject currentJoint = articulationChain[jointIndex].gameObject;
+           Vector3 currentJointangles = currentJoint.transform.localEulerAngles;*/
+           // Debug.LogWarning(currentJointangles);
+          //  Vector3 current_angle = currentJointangles.localEulerAngles;
+            
+            
+             
+           // GetJointAngles(currentJoint,currentJointangles);
+            
+            
+            
+           /* float moveDirection = Input.GetAxisRaw("Elbow");
+           //  moveDirection = Input.GetAxisRaw("left");
+                moveDirection = Input.GetAxisRaw("Horizontal");*/
             ;
             JointControl current = articulationChain[jointIndex].GetComponent<JointControl>();
-            if (previousIndex != jointIndex)
+            /*if (previousIndex != jointIndex)
             {
                 JointControl previous = articulationChain[previousIndex].GetComponent<JointControl>();
                 previous.direction = RotationDirection.None;
                 previousIndex = jointIndex;
-            }
+            }*/
 
             if (current.controltype != control)
                 UpdateControlType(current);
@@ -155,13 +277,25 @@ namespace RosSharp.Control
             {
                 current.direction = RotationDirection.None;
             }
-        }
 
+            //  returnCurrentJoint(currentJoint);
+            
+            
+        }
+       /* private void GetJointAngles(GameObject currentJoint, Vector3 current_angle)
+        {
+           
+         
+
+            Debug.Log(currentJoint.name + " " + current_angle) ;
+        }*/
+      
+ 
         /// <summary>
         /// Stores original color of the part being highlighted
         /// </summary>
         /// <param name="index">Index of the part in the Articulation chain</param>
-        private void StoreJointColors(int index)
+       /* private void StoreJointColors(int index)
         {
             Renderer[] materialLists = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
             prevColor = new Color[materialLists.Length];
@@ -176,13 +310,13 @@ namespace RosSharp.Control
                     prevColor[counter] = materialLists[counter].sharedMaterial.GetColor("_Color");
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// Resets original color of the part being highlighted
         /// </summary>
         /// <param name="index">Index of the part in the Articulation chain</param>
-        private void ResetJointColors(int index)
+       /* private void ResetJointColors(int index)
         {
             Renderer[] previousRendererList = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
             for (int counter = 0; counter < previousRendererList.Length; counter++)
@@ -196,7 +330,8 @@ namespace RosSharp.Control
                     previousRendererList[counter].material.color = prevColor[counter];
                 }
             }
-        }
+        }*/
+       
 
         public void UpdateControlType(JointControl joint)
         {
@@ -226,4 +361,6 @@ namespace RosSharp.Control
             GUI.Label(new Rect(Screen.width / 2 - 200, 30, 400, 20), "Press up/down arrow keys to move " + selectedJoint + ".", centeredStyle);
         }
     }
+
+    
 }
