@@ -19,16 +19,16 @@ public class button_check: MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // -------------------- UTF8Encoding -------------------- //
     private UTF8Encoding utf8 = new UTF8Encoding();
 
+
+
+
+
     // -------------------- Button -> Pressed -------------------- //
     public void OnPointerDown(PointerEventData eventData)
     {
-        // create auxiliary command string for speed control UR robot
-        GlobalVariables_TCP_IP_client.aux_command_str = "speedl([" + speed_param[0] +","+  speed_param[1] + "," + speed_param[2]
+        //create auxiliary command string for speed control UR robot
+        GlobalVariables_TCP_IP_client.aux_command_str = "movel([" + speed_param[0] + "," + speed_param[1] + "," + speed_param[2]
                                                                    + "," + speed_param[3] + "," + speed_param[4] + "," + speed_param[5] + "], a =" + acceleration + ", t =" + time + ")" + "\n";
-        // get bytes from command string
-        GlobalVariables_TCP_IP_client.command = utf8.GetBytes(GlobalVariables_TCP_IP_client.aux_command_str);
-        // confirmation variable -> is pressed
-        GlobalVariables_TCP_IP_client.button_pressed[index] = true;
     }
 
     // -------------------- Button -> Un-Pressed -------------------- //

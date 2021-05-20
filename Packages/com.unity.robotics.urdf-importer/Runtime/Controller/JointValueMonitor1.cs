@@ -8,18 +8,19 @@ namespace RosSharp.Control
     public class JointValueMonitor1 : MonoBehaviour
     {
         public Controller Controller;
-        [SerializeField] private Text[] pos_Values;
+        
         [SerializeField] private Text[] rot_Values;
-        [SerializeField] private GameObject[] Joints;
-        private Vector3[] positions;
+        
+       
+        private ArticulationBody[] chain;
 
 
-        private int i, j = 0;
-        private bool run;
+       
         // Start is called before the first frame update
         void Start()
         {
-
+            chain = GameObject.Find("UR5").GetComponentsInChildren<ArticulationBody>();
+            Debug.LogWarning("chain len"+chain.Length);
            
 
 
@@ -28,12 +29,15 @@ namespace RosSharp.Control
         // Update is called once per frame
         void Update()
         {
-            for (i = 0; i <= 5; i++)
-            {
-               // positions[i] = Joints[i].transform.localPosition;
-                pos_Values[i].text = Joints[i].transform.position.ToString();
-                rot_Values[i].text = Joints[i].transform.eulerAngles.ToString();
-            }
+            
+            rot_Values[0].text = System.Math.Round(chain[2].xDrive.target,2).ToString();
+            rot_Values[1].text = System.Math.Round(chain[3].xDrive.target,2).ToString();
+            rot_Values[2].text = System.Math.Round(chain[4].xDrive.target,2).ToString();
+            rot_Values[3].text = System.Math.Round(chain[5].xDrive.target,2).ToString();
+            rot_Values[4].text = System.Math.Round(chain[6].xDrive.target,2).ToString();
+            rot_Values[5].text = System.Math.Round(chain[7].xDrive.target,2).ToString();
+            
+
         }
         
     }

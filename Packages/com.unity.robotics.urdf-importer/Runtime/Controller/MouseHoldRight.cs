@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Events;
-using UnityEngine.UI;
-using UnityEngine.Rendering;
+
+
 namespace RosSharp.Control
 {
     public class MouseHoldRight : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
     {
         public RosSharp.Control.Controller Controller;
         public bool pointerDown;
+        
         public void Start()
         {
             Controller=GameObject.Find("UR5").transform.GetChild(0).GetComponent<Controller>();
@@ -23,6 +21,7 @@ namespace RosSharp.Control
             {
                //Controller.selectedIndex = 2;
                 pointerDown = true;
+                
             }
            
             if (this.gameObject.transform.parent.name == "Upper_arm_link")

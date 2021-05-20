@@ -39,6 +39,7 @@ namespace RosSharp.Control
 
         [Tooltip("Color to highlight the currently selected join")]
         public Color highLightColor = new Color(255, 0, 0, 255);
+       // private List<float> target;
         // public MouseHold shoulder_link=GameObject.Find("Canvas").transform.GetChild(0).transform.GetChild(0).transform.GetChild(3).GetComponent<MouseHold>();
 
         void Start()
@@ -191,6 +192,7 @@ namespace RosSharp.Control
 
             UpdateDirection(selectedIndex);*/
             Highlight(selectedIndex);
+           // Debug.Log("Joint Target for Shoulder is "+articulationChain[2].GetDriveTargets(target));*/
 
         }
 
@@ -255,6 +257,8 @@ namespace RosSharp.Control
                 moveDirection = Input.GetAxisRaw("Horizontal");*/
             ;
             JointControl current = articulationChain[jointIndex].GetComponent<JointControl>();
+           // Debug.Log("The joint target is"+current.joint.GetDriveTargets(target));
+
             /*if (previousIndex != jointIndex)
             {
                 JointControl previous = articulationChain[previousIndex].GetComponent<JointControl>();
@@ -342,6 +346,7 @@ namespace RosSharp.Control
                 drive.stiffness = stiffness;
                 drive.damping = damping;
                 joint.joint.xDrive = drive;
+              
             }
         }
 

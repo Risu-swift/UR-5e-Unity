@@ -10,7 +10,7 @@ public class interfaceActivator : MonoBehaviour
     void Start()
     {
         interfacepanel = GameObject.Find("Interface");
-        interfacepanel.SetActive(false);
+        //interfacepanel.SetActive(false);
     }
 
     // Update is called once per frame
