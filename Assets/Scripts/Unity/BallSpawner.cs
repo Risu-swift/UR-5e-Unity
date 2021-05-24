@@ -8,19 +8,19 @@ public class BallSpawner : MonoBehaviour
     private PPBall ball;
     public float VelocityScale;
     private bool triggerButton;
-   public interfaceActivator ur5trigger;
+   //public interfaceActivator ur5trigger;
 
     private bool isButtonPressed = false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         ball = GetComponent<PPBall>();
-        ur5trigger = GameObject.Find("Controll").transform.GetChild(2).GetComponent<interfaceActivator>();
+       // ur5trigger = GameObject.Find("Controll").transform.GetChild(2).GetComponent<interfaceActivator>();
     }
 
     void Update()
     {
-        if (ur5trigger.entered)
+       /* if (ur5trigger.entered)
         {
             triggerButton = false;
 
@@ -29,10 +29,10 @@ public class BallSpawner : MonoBehaviour
         {
             isButtonPressed = Input.GetKeyDown("space");
             triggerButton = OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger);
-        }
+        }*/
 
-        /*isButtonPressed = Input.GetKeyDown("space");
-        triggerButton = OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger);*/
+        isButtonPressed = Input.GetKeyDown("space");
+        triggerButton = OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger);
 
         // Input.GetAxis("Axis1D.PrimaryIndexTrigger");
     }

@@ -194,7 +194,10 @@ using UnityEngine;
                     }
                     break;
             }
-        }
+        Debug.Log(GlobalVariables_Main_Control.ur3_dt_enable_tcpip_read);
+        Debug.LogError((-1)*GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[0]);
+
+    }
 
         // ------------------------------------------------------------------------------------------------------------------------//
         // -------------------------------------------------------- FUNCTIONS -----------------------------------------------------//
@@ -313,6 +316,7 @@ using UnityEngine;
                         GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[3] = (float)Math.Round(BitConverter.ToDouble(joint_4, 0) * (180 / Math.PI), 2);
                         GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[4] = (float)Math.Round(BitConverter.ToDouble(joint_5, 0) * (180 / Math.PI), 2);
                         GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[5] = (float)Math.Round(BitConverter.ToDouble(joint_6, 0) * (180 / Math.PI), 2);
+                    
 
                         robotBaseRotLink_UR3_before[0] = GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[0];
                         robotBaseRotLink_UR3_before[1] = GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[1];
