@@ -8,45 +8,45 @@ namespace RosSharp.Control
     {
         public RosSharp.Control.Controller Controller;
         public bool pointerDown;
-        
+
         public void Start()
         {
-            Controller=GameObject.Find("UR5").transform.GetChild(0).GetComponent<Controller>();
+            Controller = GameObject.Find("UR5").transform.GetChild(0).GetComponent<Controller>();
         }
         public void OnPointerDown(PointerEventData eventData)
         {
-           //pointerDown = true;
+            //pointerDown = true;
 
             if (this.gameObject.transform.parent.name == "Shoulder_link")
             {
-               //Controller.selectedIndex = 2;
+                //Controller.selectedIndex = 2;
                 pointerDown = true;
-                
+
             }
-           
+
             if (this.gameObject.transform.parent.name == "Upper_arm_link")
             {
                 //Controller.selectedIndex = 3;
-                 pointerDown = true;
+                pointerDown = true;
             }
             if (this.gameObject.transform.parent.name == "forarm_link")
             {
-               // Controller.selectedIndex = 4;
+                // Controller.selectedIndex = 4;
                 pointerDown = true;
             }
             if (this.gameObject.transform.parent.name == "wrist1_link")
             {
-               // Controller.selectedIndex = 5;
+                // Controller.selectedIndex = 5;
                 pointerDown = true;
             }
             if (this.gameObject.transform.parent.name == "wrist2_link")
             {
-               // Controller.selectedIndex = 6;
+                // Controller.selectedIndex = 6;
                 pointerDown = true;
             }
             if (this.gameObject.transform.parent.name == "wrist3_link")
             {
-               // Controller.selectedIndex = 7;
+                // Controller.selectedIndex = 7;
                 pointerDown = true;
             }
 
@@ -94,8 +94,8 @@ namespace RosSharp.Control
                 Controller.moveDirection = 0;
             }
         }
-        
-        
-      
+
+
+
     }
 }
