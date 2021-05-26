@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text;
+using RosSharp.Control;
+
 
 public class realtimeControl : MonoBehaviour,IPointerUpHandler,IPointerDownHandler
 {
@@ -41,37 +43,6 @@ public class realtimeControl : MonoBehaviour,IPointerUpHandler,IPointerDownHandl
     {
         if(isPressed)
         {
-            /*if (index == 1)
-            {
-                GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0]*//*0.00349066*//* + "," + targetVal[1] + "," + targetVal[2]
-                                                                            + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
-            }
-            if (index == 2)
-            {
-                GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0] + "," + targetVal[1] + "," + targetVal[2]
-                                                                            + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
-            }
-            if (index == 3)
-            {
-                GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0] + "," + targetVal[1] + "," + targetVal[2]
-                                                                            + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
-            }
-            if (index == 4)
-            {
-                GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0] + "," + targetVal[1] + "," + targetVal[2]
-                                                                            + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
-            }
-            if (index == 5)
-            {
-                GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0] + "," + targetVal[1] + "," + targetVal[2]
-                                                                            + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
-            }
-            if (index == 6)
-            {
-                GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0] + "," + targetVal[1] + "," + targetVal[2]
-                                                                            + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
-            }*/
-
             GlobalVariables_TCP_IP_client.aux_command_str = "movej([" + targetVal[0]/*0.00349066*/ + "," + targetVal[1] + "," + targetVal[2]
                                                                             + "," + targetVal[3] + "," + targetVal[4] + "," + targetVal[5] + "], a =" + "5" + ", v =" + "5" + ")" + "\n";
             GlobalVariables_TCP_IP_client.command = utf8.GetBytes(GlobalVariables_TCP_IP_client.aux_command_str);
