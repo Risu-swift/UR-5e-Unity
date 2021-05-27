@@ -11,6 +11,8 @@ public class realtimeControl : MonoBehaviour,IPointerUpHandler,IPointerDownHandl
     private float[] targetVal;
     private UTF8Encoding utf8 = new UTF8Encoding();
     private bool isPressed;
+    
+  
 
     // Start is called before the first frame update
     void Start()

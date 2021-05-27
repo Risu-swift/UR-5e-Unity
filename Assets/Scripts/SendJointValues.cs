@@ -12,10 +12,13 @@ public class SendJointValues : MonoBehaviour// IPointerDownHandler, IPointerUpHa
 {
     // -------------------- String -------------------- //
     public string acceleration = "0.15";
+    
     public string time = "0.03";
     public string[] speed_param = new string[6] { "0.0", "0.0", "0.0", "0.0", "0.0", "0.0" };
     private float[] rads;
     private getRadians rad;
+    
+    
     // -------------------- Int -------------------- //
     public int index;
     // -------------------- UTF8Encoding -------------------- //
