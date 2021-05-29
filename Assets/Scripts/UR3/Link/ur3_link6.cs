@@ -3,16 +3,41 @@
 // ------------------------------------------------------------------------------------------------------------------------//
 
 // -------------------- Unity -------------------- //
+
+using System;
 using UnityEngine;
+using RosSharp.Control;
+using UnityEngine.UI;
 
 public class ur3_link6 : MonoBehaviour
 {
+    private ArticulationDrive currentJoint;
+    private ArticulationBody chain;
+    private Controller _controller;
+    private bool clicked = false;
+    public int joint;
+    public Toggle _Toggle;
+    private void Start()
+    {
+        chain = this.gameObject.GetComponent<ArticulationBody>();
+        _controller = GetComponentInParent<Controller>();
+        
+
+    }
+
+    
+
+
     void FixedUpdate()
     {
-        transform.localEulerAngles = new Vector3(0f, 0f, GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[5]);
+        currentJoint = chain.gameObject.GetComponent<JointControl>().joint.xDrive;
+        currentJoint.target = GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[5];
+        currentJoint.stiffness = _controller.stiffness;
+        currentJoint.damping = _controller.damping;
+        chain.gameObject.GetComponent<JointControl>().joint.xDrive = currentJoint;
+      
     }
-    void OnApplicationQuit()
-    {
-        Destroy(this);
-    }
+
+    
+    
 }

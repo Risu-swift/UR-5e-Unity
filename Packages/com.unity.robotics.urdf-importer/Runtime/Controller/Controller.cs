@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 
+
 namespace RosSharp.Control
 {
     public enum RotationDirection { None = 0, Positive = 1, Negative = -1 };
     public enum ControlType { PositionControl };
+    
 
     public class Controller : MonoBehaviour
     {
@@ -50,6 +52,7 @@ namespace RosSharp.Control
                 joint.xDrive = currentDrive;
             }
             DisplaySelectedJoint(selectedIndex);
+            
         }
         void Update()
         {
@@ -74,10 +77,9 @@ namespace RosSharp.Control
                 }
                 
             }
+            
             UpdateDirection(selectedIndex);
             Highlight(selectedIndex);
-            
-
         }
         public void Highlight(int selectedIndex)
         {

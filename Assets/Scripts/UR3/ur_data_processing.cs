@@ -194,8 +194,7 @@ using UnityEngine;
                     }
                     break;
             }
-        Debug.Log(GlobalVariables_Main_Control.ur3_dt_enable_tcpip_read);
-        Debug.LogError((-1)*GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[0]);
+        
 
     }
 
