@@ -1,4 +1,4 @@
-﻿// ------------------------------------------------------------------------------------------------------------------------//
+// ------------------------------------------------------------------------------------------------------------------------//
 // ----------------------------------------------------- LIBRARIES --------------------------------------------------------//
 // ------------------------------------------------------------------------------------------------------------------------//
 
@@ -22,10 +22,11 @@ public class ur3_link1 : MonoBehaviour
     {
         chain = this.gameObject.GetComponent<ArticulationBody>();
         _controller = GetComponentInParent<Controller>();
+        
     }
     void FixedUpdate()
     {
-        
+                
             currentJoint = chain.gameObject.GetComponent<JointControl>().joint.xDrive;
             if (joint == 1)
             {
@@ -62,6 +63,9 @@ public class ur3_link1 : MonoBehaviour
             chain.gameObject.GetComponent<JointControl>().joint.xDrive = currentJoint;
             Debug.Log("value" + GlobalVariables_TCP_IP_client.robotBaseRotLink_UR3_j[0]);
         
+    }
+    void OnApplicationQuit() {
+        Destroy(this);
     }
 
     

@@ -55,6 +55,7 @@ public class main_ui_control : MonoBehaviour
     // -------------------- UTF8Encoding -------------------- //
     private UTF8Encoding utf8 = new UTF8Encoding();
 
+
     // ------------------------------------------------------------------------------------------------------------------------ //
     // ------------------------------------------------ INITIALIZATION {START} ------------------------------------------------ //
     // ------------------------------------------------------------------------------------------------------------------------ //
@@ -97,6 +98,7 @@ public class main_ui_control : MonoBehaviour
         GlobalVariables_TCP_IP_client.aux_command_str = "speedl([0.0,0.0,0.0,0.0,0.0,0.0], a = 0.15, t = 0.03)" + "\n";
         // get bytes from string command
         GlobalVariables_TCP_IP_client.command = utf8.GetBytes(GlobalVariables_TCP_IP_client.aux_command_str);
+        
     }
 
     // ------------------------------------------------------------------------------------------------------------------------ //
@@ -161,6 +163,7 @@ public class main_ui_control : MonoBehaviour
         diagnostic_panel_img.gameObject.SetActive(false);
         joystick_panel_img.gameObject.SetActive(false);
         connection_panel_img.transform.localPosition = new Vector3(0f, 0f, 0f);
+        
         // visible off
         diagnostic_panel_img.transform.localPosition = new Vector3(780f + (ex_param), 0f, 0f);
         joystick_panel_img.transform.localPosition = new Vector3(1550f + (ex_param), 0f, 0f);

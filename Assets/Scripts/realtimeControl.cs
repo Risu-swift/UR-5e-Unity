@@ -36,7 +36,6 @@ public class realtimeControl : MonoBehaviour,IPointerUpHandler,IPointerDownHandl
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-
         isPressed = true;
     }
     private void FixedUpdate()
@@ -50,5 +49,6 @@ public class realtimeControl : MonoBehaviour,IPointerUpHandler,IPointerDownHandl
         }
 
     }
+    
     }
 
