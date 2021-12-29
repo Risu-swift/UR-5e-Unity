@@ -37,6 +37,9 @@ using TMPro;
 
 public class main_ui_control : MonoBehaviour
 {
+    //-----------------------Text Asset Script Files------------------ //
+    public TextAsset script;
+    
     // -------------------- GameObject -------------------- //
     public GameObject camera_obj;
     // -------------------- Image -------------------- //
@@ -153,6 +156,12 @@ public class main_ui_control : MonoBehaviour
     {
         // Destroy all
         Destroy(this);
+    }
+
+    public void TaskOnClick_SendScript()
+    {
+        GlobalVariables_TCP_IP_client.aux_command_str = script.text;
+        GlobalVariables_TCP_IP_client.command = utf8.GetBytes(GlobalVariables_TCP_IP_client.aux_command_str);
     }
 
     // -------------------- Connection Panel -> Visible On -------------------- //
