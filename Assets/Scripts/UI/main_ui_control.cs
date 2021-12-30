@@ -161,7 +161,10 @@ public class main_ui_control : MonoBehaviour
     public void TaskOnClick_SendScript()
     {
         GlobalVariables_TCP_IP_client.aux_command_str = script.text;
+        Debug.Log((GlobalVariables_TCP_IP_client.aux_command_str));
         GlobalVariables_TCP_IP_client.command = utf8.GetBytes(GlobalVariables_TCP_IP_client.aux_command_str);
+        GlobalVariables_TCP_IP_client.button_pressed[1] = true;
+
     }
 
     // -------------------- Connection Panel -> Visible On -------------------- //

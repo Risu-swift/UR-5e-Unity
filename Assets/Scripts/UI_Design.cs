@@ -3,59 +3,93 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UI_Design : MonoBehaviour
 {
-    [SerializeField]private GameObject AutoModePanel;
+    //---------------------UI Fields---------------------------------//
+    [FormerlySerializedAs("AutoModePanel")] [SerializeField] private GameObject autoModePanel;
     [SerializeField] private TMP_Text currentMode;
-    private bool isAutoMode = true;
+    [SerializeField] private TMP_InputField ipAddrText;
+    [SerializeField] private TMP_Text connectionStatus;
+    [SerializeField] private GameObject freeHandPanel;
 
+    //---------------------MainUIControl Script Object----------------//
+    [SerializeField] private UI_Control _uiControl;
+    
+    //---------------------Bool to check values-----------------------//
+    private bool isConnected = false;
     private void Start()
     {
         currentMode.text = "Auto";
-        isAutoMode = true;
-        AutoModePanel.SetActive(true);
+        GlobalVariables_Main_Control.isAuto = true;
+        autoModePanel.SetActive(true);
+        freeHandPanel.SetActive(false);
     }
 
     private void Update()
     {
-        if (isAutoMode)
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            AutoModePanel.SetActive(isAutoMode);
+            currentMode.text = "FreeHand";
+            GlobalVariables_Main_Control.isAuto = false;
+        }
+        else if(Input.GetKeyDown(KeyCode.G))
+        {
+            currentMode.text = "Auto";
+            GlobalVariables_Main_Control.isAuto = true;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.K) && !isConnected)
+        {
+            _uiControl.TaskOnClick_ConnectBTN(ipAddrText.text);
+            connectionStatus.color = Color.green;
+            connectionStatus.text = "Connected";
+            isConnected = true;
+        }
+        else if(Input.GetKeyDown(KeyCode.L) && isConnected)
+        {
+            _uiControl.TaskOnClick_DisconnectBTN();
+            connectionStatus.color = Color.red;
+            connectionStatus.text = "Disconnected";
+            isConnected = false;
+        }
+        
+        if (GlobalVariables_Main_Control.isAuto && isConnected)
+        {
+            freeHandPanel.SetActive(!GlobalVariables_Main_Control.isAuto);
+            autoModePanel.SetActive(GlobalVariables_Main_Control.isAuto);
             if (Input.GetKeyDown(KeyCode.S))
             {
-                //TODO ADD code for linear mode.
+                _uiControl.TaskOnClick_SendScript();
                 Debug.Log("Linear Mode");
             }
             else if(Input.GetKeyDown(KeyCode.A))
             {
-                //TODO add code for Curved mode.
+                _uiControl.TaskOnClick_SendScript();
                 Debug.Log("Curved Mode");
             }
             else if(Input.GetKeyDown(KeyCode.D))
             {
-                //TODO add code for Hybrid Mode.
+                _uiControl.TaskOnClick_SendScript();
                 Debug.Log("Hybrid Mode");
             }
             
                 
         }
-        else
+        else if(!GlobalVariables_Main_Control.isAuto)
         {
-            AutoModePanel.SetActive(isAutoMode);
+            freeHandPanel.SetActive(!GlobalVariables_Main_Control.isAuto);
+            autoModePanel.SetActive(GlobalVariables_Main_Control.isAuto);
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                _uiControl.TaskOnClick_FreeHand();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            currentMode.text = "FreeHand";
-            isAutoMode = false;
-        }
-        else if(Input.GetKeyDown(KeyCode.G))
-        {
-            currentMode.text = "Auto";
-            isAutoMode = true;
-        }
+ 
        
         
     }

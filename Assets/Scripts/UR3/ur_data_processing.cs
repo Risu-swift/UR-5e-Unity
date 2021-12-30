@@ -42,6 +42,8 @@ using UnityEngine;
         // -------------------- Bool -------------------- //
         public static bool ur3_dt_enable_tcpip_read, ur3_dt_enable_tcpip_write;
         public static bool connect, disconnect;
+
+        public static bool isAuto;
         // -------------------- String -------------------- //
         public static string ur3_tcpip_read_config_str; public static int ur3_tcpip_read_config_int;
         public static string ur3_tcpip_write_config_str; public static int ur3_tcpip_write_config_int;
@@ -106,6 +108,8 @@ using UnityEngine;
             // Control -> Start {Write TCP/Ip data}
             GlobalVariables_Main_Control.ur3_dt_enable_tcpip_write = false;
 
+            GlobalVariables_Main_Control.isAuto = true;
+
         }
 
         // ------------------------------------------------------------------------------------------------------------------------ //
@@ -150,6 +154,7 @@ using UnityEngine;
                             if (GlobalVariables_TCP_IP_client.button_pressed[i] == true)
                             {
                                 aux_counter_pressed_btn++;
+                                GlobalVariables_TCP_IP_client.button_pressed[i] = false;
                             }
                         }
 
@@ -167,7 +172,7 @@ using UnityEngine;
 
                         // null auxiliary variable
                         aux_counter_pressed_btn = 0;
-
+                        
                         if (GlobalVariables_Main_Control.disconnect == true)
                         {
                             // Control -> Stop {Read TCP/IP data}
