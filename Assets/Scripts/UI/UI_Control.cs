@@ -48,6 +48,7 @@ public class UI_Control : MonoBehaviour
     // -------------------- String List --------------------- //
     private List<String> rows;
     [SerializeField]private MultiCmd _multiCmd;
+   
 
     // -------------------- UTF8Encoding -------------------- //
     private UTF8Encoding utf8 = new UTF8Encoding();
