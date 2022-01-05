@@ -54,3 +54,5 @@ MonoBehaviour:
   - {fileID: 4818293155451206850, guid: 542a6345c56bbcd41b92f421fac57d92, type: 3}
   - {fileID: 5928091942230486030, guid: c4b9c875ed967534eb12cd57aeeb1183, type: 3}
   - {fileID: 6654152787936889342, guid: 61e60013ce1d7d942b8975c98fdf8154, type: 3}
+  isRight: 1
+  UI_Des: {fileID: 8210455738383508755, guid: 84f096d1c8c9a3c43898acd9c4303b3e, type: 3}

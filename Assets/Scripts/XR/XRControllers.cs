@@ -11,42 +11,37 @@ public class XRControllers : MonoBehaviour
     public InputDevice TargetDevice { get; set; }
     private List<InputDevice> Devices;
     GameObject CurrentController;
+    public bool isRight;
+    public GameObject UI_Des;
+    private UI_Design UI_Design;
     // Start is called before the first frame update
     void Start()
     {
+        UI_Design = UI_Des.GetComponent<UI_Design>();
         Devices = new List<InputDevice>();
-        InputDevices.GetDevicesWithCharacteristics(DeviceCharacter,Devices);
+        InputDevices.GetDevicesWithCharacteristics(DeviceCharacter, Devices);
         if (Devices.Count > 0)
         {
+            Debug.Log("Device Found");
             TargetDevice = Devices[0];
-            foreach (var d in Devices)
+            Debug.Log(TargetDevice.name);
+            if (!isRight)
             {
-                if (d.characteristics == InputDeviceCharacteristics.Controller)
-                {
-                    if (d.characteristics == InputDeviceCharacteristics.Left)
-                    {
-                        CurrentController = ControllerPrefabs[1];
-                    }
-                    else if (d.characteristics == InputDeviceCharacteristics.Right)
-                    {
-                        CurrentController = ControllerPrefabs[2];
-                    }
-                    else
-                    {
-                        CurrentController = ControllerPrefabs[0];
-                    }
-                }
+                CurrentController = ControllerPrefabs[1];
             }
-
-
-            if (CurrentController)
+            else if (isRight)
             {
-                SpawnedController = Instantiate(CurrentController, transform);
+                CurrentController = ControllerPrefabs[2];
             }
-           
-
         }
+
+        if (CurrentController)
+        {
+            SpawnedController = Instantiate(CurrentController, transform);
+        }
+    }
+
         
     }
 
-}
+
